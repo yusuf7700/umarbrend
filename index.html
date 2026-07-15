@@ -28,7 +28,7 @@
         <div class="container">
 
             <a href="index.html" class="logo">
-                <img src="logo.jpg" alt="Umar Brend">
+                <img src="assets/logo/logo.jpg" alt="Umar Brend">
             </a>
 
             <nav class="navbar">
@@ -42,6 +42,10 @@
             </nav>
 
             <div class="header-icons">
+
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
 
                 <button class="icon-btn" id="searchBtn">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -245,21 +249,29 @@
 
         <div class="search-box">
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Mahsulot qidirish...">
+            <div class="search-input-row">
 
-            <button id="closeSearch">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Mahsulot qidirish...">
 
-                <i class="fa-solid fa-xmark"></i>
+                <button id="closeSearch">
 
-            </button>
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+            <div class="search-results" id="searchResults"></div>
 
         </div>
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
 
 </body>
