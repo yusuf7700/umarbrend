@@ -1,17 +1,267 @@
 <!DOCTYPE html>
 <html lang="uz">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Umar Brend</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="app"></div>
-<div id="toast" class="toast"></div>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="app.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Umar Brend | Premium Oyoq Kiyimlar</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body data-page="home">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <a href="index.html" class="logo">
+                <img src="assets/logo/logo.png" alt="Umar Brend">
+            </a>
+
+            <nav class="navbar">
+
+                <a href="index.html" class="active">Bosh sahifa</a>
+
+                <a href="#">Erkaklar</a>
+
+                <a href="#">Ayollar</a>
+
+            </nav>
+
+            <div class="header-icons">
+
+                <button class="icon-btn" id="searchBtn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <a class="icon-btn" href="sevimlilar.html" style="position:relative;">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="count-badge" id="favCount">0</span>
+                </a>
+
+                <button class="icon-btn" id="cartBtn" style="position:relative;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="count-badge" id="cartCount">0</span>
+                </button>
+
+                <button class="icon-btn" id="themeBtn">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="container hero-content">
+
+            <div class="hero-text">
+
+                <span class="hero-badge">
+                    Premium Collection
+                </span>
+
+                <h1>
+
+                    Har qadamingiz
+                    <br>
+                    Premium uslubda.
+
+                </h1>
+
+                <p>
+
+                    Erkaklar va ayollar uchun zamonaviy,
+                    sifatli va original oyoq kiyimlar.
+
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="#popular" class="btn btn-gold">
+                        Xarid qilish
+                    </a>
+
+                    <a href="#popular" class="btn btn-outline">
+                        Mahsulotlar
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="hero-image">
+
+                <!-- Keyingi qismda banner rasmi qo'shiladi -->
+
+                <div class="image-placeholder">
+
+                    Banner Image
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= POPULAR ================= -->
+
+    <section class="products" id="popular">
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <h2>
+
+                    🔥 Mashhur mahsulotlar
+
+                </h2>
+
+                <p>
+
+                    Eng ko'p ko'rilgan mahsulotlar
+
+                </p>
+
+            </div>
+
+            <div class="product-grid" id="popularProducts">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= NEW ================= -->
+
+    <section class="products">
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <h2>
+
+                    🆕 Yangi mahsulotlar
+
+                </h2>
+
+                <p>
+
+                    Oxirgi qo'shilgan mahsulotlar
+
+                </p>
+
+            </div>
+
+            <div class="product-grid" id="newProducts">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= FAVORITES ================= -->
+
+    <section class="products">
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <h2>
+
+                    ❤️ Xaridorlar tanlovi
+
+                </h2>
+
+                <p>
+
+                    Eng ko'p yoqtirilgan mahsulotlar
+
+                </p>
+
+            </div>
+
+            <div class="product-grid" id="favoriteProducts">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <img src="assets/logo/logo.png" alt="Umar Brend">
+
+            <p>
+
+                © 2026 Umar Brend.
+                Barcha huquqlar himoyalangan.
+
+            </p>
+
+            <div class="footer-links">
+                <a href="tel:+998901234567"><i class="fa-solid fa-phone"></i> +998 90 123 45 67</a>
+                <a href="https://t.me/umarbrend" target="_blank"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                <a href="https://instagram.com/umarbrend" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- SEARCH MODAL -->
+
+    <div class="search-modal" id="searchModal">
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Mahsulot qidirish...">
+
+            <button id="closeSearch">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>
