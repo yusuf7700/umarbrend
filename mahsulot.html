@@ -371,6 +371,23 @@
 
                 await refreshReviews(productId);
 
+                const reviewedList = JSON.parse(localStorage.getItem("ub_reviewed_products")) || [];
+                const alreadyReviewed = reviewedList.includes(Number(productId));
+
+                const formBox = document.querySelector(".review-form-box");
+
+                if (alreadyReviewed) {
+
+                    formBox.innerHTML = `
+                        <p style="color:var(--gray);">
+                            ✅ Siz bu mahsulotga allaqachon sharh qoldirgansiz. Rahmat!
+                        </p>
+                    `;
+
+                    return;
+
+                }
+
                 const starPicker = document.getElementById("starPicker");
 
                 starPicker.querySelectorAll("i").forEach(star => {
@@ -412,14 +429,17 @@
                         return;
                     }
 
-                    document.getElementById("reviewForm").reset();
-                    starPicker.querySelectorAll("i").forEach(s => s.className = "fa-regular fa-star");
-                    selectedRating = 0;
-
-                    msg.textContent = "Rahmat! Sharhingiz qo'shildi ✅";
-                    msg.classList.add("success");
+                    const updatedList = JSON.parse(localStorage.getItem("ub_reviewed_products")) || [];
+                    updatedList.push(Number(productId));
+                    localStorage.setItem("ub_reviewed_products", JSON.stringify(updatedList));
 
                     await refreshReviews(productId);
+
+                    formBox.innerHTML = `
+                        <p style="color:var(--gray);">
+                            ✅ Rahmat! Sharhingiz qo'shildi.
+                        </p>
+                    `;
 
                 });
 
