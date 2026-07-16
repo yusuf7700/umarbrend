@@ -154,7 +154,7 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 const CONTACT = {
     telegram: "https://t.me/brand_umar",
-    instagram: "https://instagram.com/umar.brend_",
+    instagram: "https://instagram.com/brend.umar_",
     phone: "+998946266816"
 };
 
