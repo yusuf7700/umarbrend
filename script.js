@@ -475,6 +475,67 @@ function getProductById(id) {
 
 
 // ==============================
+// MIJOZ SHARHLARI (Reviews)
+// ==============================
+
+async function getReviews(productId) {
+
+    const { data, error } = await sb
+        .from("reviews")
+        .select("*")
+        .eq("product_id", Number(productId))
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Sharhlarni yuklashda xatolik:", error);
+        return [];
+    }
+
+    return data;
+
+}
+
+async function addReview(productId, name, rating, comment) {
+
+    const { error } = await sb.from("reviews").insert({
+        product_id: Number(productId),
+        name,
+        rating: Number(rating),
+        comment
+    });
+
+    if (error) {
+        console.error("Sharh qo'shishda xatolik:", error);
+        return false;
+    }
+
+    return true;
+
+}
+
+async function getAllReviews() {
+
+    const { data, error } = await sb
+        .from("reviews")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Sharhlarni yuklashda xatolik:", error);
+        return [];
+    }
+
+    return data;
+
+}
+
+async function deleteReview(id) {
+    const { error } = await sb.from("reviews").delete().eq("id", id);
+    return !error;
+}
+
+
+// ==============================
 // SOTUVLAR JURNALI (Admin "Sotildi" uchun)
 // ==============================
 
