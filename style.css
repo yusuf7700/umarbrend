@@ -962,9 +962,11 @@ body.dark .header{
     display:grid;
 
     grid-template-columns:
-    repeat(auto-fit,minmax(280px,1fr));
+    repeat(auto-fill,minmax(260px,320px));
 
     gap:30px;
+
+    justify-content:center;
 
 }
 
@@ -1003,7 +1005,11 @@ body.dark .header{
 
 .product-image img{
 
-    height:300px;
+    aspect-ratio:4/3;
+
+    height:auto;
+
+    width:100%;
 
     object-fit:cover;
 
