@@ -572,7 +572,8 @@
 }
 
 #productForm label,
-#sellForm label{
+#sellForm label,
+#settingsForm label{
 
     display:block;
     font-size:13px;
@@ -585,7 +586,8 @@
 #productForm input,
 #productForm select,
 #productForm textarea,
-#sellForm input{
+#sellForm input,
+#settingsForm input{
 
     width:100%;
     padding:12px 14px;
@@ -598,6 +600,28 @@
 
     background:var(--bg);
     color:var(--text);
+
+}
+
+.settings-msg{
+
+    margin-top:14px;
+    font-size:13px;
+    display:none;
+
+}
+
+.settings-msg.success{
+
+    display:block;
+    color:#28a745;
+
+}
+
+.settings-msg.error{
+
+    display:block;
+    color:#e63946;
 
 }
 
