@@ -58,6 +58,9 @@
                 <button class="admin-nav-btn" data-tab="stats">
                     <i class="fa-solid fa-chart-pie"></i> Statistika
                 </button>
+                <button class="admin-nav-btn" data-tab="settings">
+                    <i class="fa-solid fa-gear"></i> Sozlamalar
+                </button>
                 <a class="admin-nav-btn" href="index.html" target="_blank">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> Saytni ko'rish
                 </a>
@@ -200,6 +203,39 @@
                         <h3>❤️ Eng ko'p like</h3>
                         <div id="topLiked" class="rank-list"></div>
                     </div>
+
+                </div>
+
+            </section>
+
+            <!-- ============ SETTINGS ============ -->
+
+            <section class="admin-tab" id="tab-settings">
+
+                <h1>Sozlamalar</h1>
+
+                <div class="admin-panel" style="max-width:420px;">
+
+                    <h3>🔐 Parolni o'zgartirish</h3>
+
+                    <form id="settingsForm">
+
+                        <label>Joriy parol</label>
+                        <input type="password" id="set_current" required>
+
+                        <label>Yangi parol</label>
+                        <input type="password" id="set_new" required minlength="4">
+
+                        <label>Yangi parolni tasdiqlang</label>
+                        <input type="password" id="set_confirm" required minlength="4">
+
+                        <button type="submit" class="btn btn-gold" style="width:100%;margin-top:20px;">
+                            Saqlash
+                        </button>
+
+                        <p id="settingsMsg" class="settings-msg"></p>
+
+                    </form>
 
                 </div>
 
