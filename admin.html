@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Umar Brend</title>
 
+    <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpg">
+    <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+    <meta name="theme-color" content="#C9A227">
+
+    <meta property="og:title" content="Umar Brend | Admin Panel">
+    <meta property="og:image" content="https://umarbrend.vercel.app/assets/logo/logo.jpg">
+    <meta property="og:type" content="website">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="adminStyle.css">
 
@@ -204,6 +212,16 @@
                         <h3>❤️ Eng ko'p like</h3>
                         <div id="topLiked" class="rank-list"></div>
                     </div>
+
+                </div>
+
+                <div class="admin-panel" style="margin-top:20px;">
+
+                    <h3>🧾 Sotuvlar tarixi</h3>
+                    <p style="color:var(--gray);font-size:13px;margin-bottom:16px;">
+                        Xato kiritilgan sotuvni shu yerdan tahrirlash yoki o'chirish mumkin — o'chirilsa, mahsulotning ombordagi soni avtomatik tiklanadi.
+                    </p>
+                    <div class="sales-table" id="salesTable"></div>
 
                 </div>
 
@@ -409,6 +427,41 @@
 
                 <label>Qancha narxda sotildi? (dona narxi)</label>
                 <input type="number" id="sell_price" required>
+
+                <button type="submit" class="btn btn-gold" style="width:100%;margin-top:16px;">
+                    Saqlash
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ================= SOTUVNI TAHRIRLASH MODAL ================= -->
+
+    <div class="admin-modal" id="editSaleModal">
+
+        <div class="admin-modal-overlay" id="editSaleModalOverlay"></div>
+
+        <div class="admin-modal-box admin-modal-small">
+
+            <button class="admin-modal-close" id="closeEditSaleModal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3>Sotuvni tahrirlash</h3>
+            <p id="editSaleProductName" class="sell-product-name"></p>
+
+            <form id="editSaleForm">
+
+                <input type="hidden" id="es_id">
+
+                <label>Nechta sotilgan edi?</label>
+                <input type="number" id="es_qty" min="1" required>
+
+                <label>Qancha narxda sotilgan edi? (dona narxi)</label>
+                <input type="number" id="es_price" required>
 
                 <button type="submit" class="btn btn-gold" style="width:100%;margin-top:16px;">
                     Saqlash
