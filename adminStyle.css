@@ -404,6 +404,44 @@
 
 }
 
+.sales-table{
+
+    background:var(--white);
+    border-radius:18px;
+    overflow:hidden;
+
+}
+
+.sales-row{
+
+    display:grid;
+    grid-template-columns:100px 2fr 70px 1fr 1fr auto;
+    align-items:center;
+    gap:14px;
+
+    padding:14px 20px;
+
+    border-bottom:1px solid var(--border);
+
+    font-size:13px;
+
+}
+
+.sales-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.sales-row.head{
+
+    font-size:11px;
+    color:var(--gray);
+    font-weight:600;
+    text-transform:uppercase;
+
+}
+
 .product-row{
 
     display:grid;
@@ -733,6 +771,19 @@
 
     .product-row span.col-category,
     .product-row span.col-sizes{
+
+        display:none;
+
+    }
+
+    .sales-row{
+
+        grid-template-columns:70px 1fr 1fr auto;
+        font-size:12px;
+
+    }
+
+    .sales-row span:nth-child(3){
 
         display:none;
 
