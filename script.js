@@ -152,11 +152,49 @@ window.addEventListener("load", () => initFavorites());
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-const CONTACT = {
-    telegram: "https://t.me/brand_umar",
-    instagram: "https://instagram.com/brend.umar_",
-    phone: "+998946266816"
+let CONTACT = {
+    telegram: "https://t.me/umarbrend",
+    instagram: "https://instagram.com/umarbrend",
+    phone: "+998901234567"
 };
+
+// Supabase'dan site_settings yuklangach (products.js) shu funksiya chaqiriladi
+function setSiteContact(data) {
+
+    if (data.telegram) CONTACT.telegram = data.telegram;
+    if (data.instagram) CONTACT.instagram = data.instagram;
+    if (data.phone) CONTACT.phone = data.phone;
+
+    applyContactLinks();
+
+    // Footer havolalarini ham yangilaymiz
+    const fTg = document.getElementById("footerTelegramLink");
+    const fIg = document.getElementById("footerInstagramLink");
+    const fPh = document.getElementById("footerPhoneLink");
+    const fPhText = document.getElementById("footerPhoneText");
+
+    if (fTg && data.telegram) fTg.href = data.telegram;
+    if (fIg && data.instagram) fIg.href = data.instagram;
+    if (fPh && data.phone) fPh.href = "tel:" + data.phone;
+    if (fPhText && data.phone) fPhText.textContent = data.phone;
+
+}
+
+function applyContactLinks() {
+
+    const tg = document.getElementById("contactTelegramLink");
+    const ig = document.getElementById("contactInstagramLink");
+    const ph = document.getElementById("contactPhoneLink");
+
+    if (tg) tg.href = CONTACT.telegram;
+    if (ig) ig.href = CONTACT.instagram;
+
+    if (ph) {
+        ph.href = "tel:" + CONTACT.phone;
+        ph.querySelector("span").textContent = CONTACT.phone;
+    }
+
+}
 
 // --------------------------------------
 // DOM'GA SAVATCHA VA ALOQA OYNASINI QO'SHISH
@@ -201,14 +239,14 @@ function injectCartMarkup() {
             <h3>Buyurtma berish uchun bog'laning</h3>
             <p>Quyidagi usullardan birini tanlang</p>
             <div class="contact-links">
-                <a href="${CONTACT.telegram}" target="_blank" class="contact-link telegram">
+                <a href="${CONTACT.telegram}" target="_blank" class="contact-link telegram" id="contactTelegramLink">
                     <i class="fa-brands fa-telegram"></i> Telegram
                 </a>
-                <a href="${CONTACT.instagram}" target="_blank" class="contact-link instagram">
+                <a href="${CONTACT.instagram}" target="_blank" class="contact-link instagram" id="contactInstagramLink">
                     <i class="fa-brands fa-instagram"></i> Instagram
                 </a>
-                <a href="tel:${CONTACT.phone}" class="contact-link phone">
-                    <i class="fa-solid fa-phone"></i> ${CONTACT.phone}
+                <a href="tel:${CONTACT.phone}" class="contact-link phone" id="contactPhoneLink">
+                    <i class="fa-solid fa-phone"></i> <span>${CONTACT.phone}</span>
                 </a>
             </div>
         </div>
@@ -442,7 +480,10 @@ function getProductById(id) {
 
 async function getSales() {
 
-    const { data, error } = await sb.from("sales").select("*");
+    const { data, error } = await sb
+        .from("sales")
+        .select("*")
+        .order("created_at", { ascending: false });
 
     if (error) {
         console.error("Sotuvlarni yuklashda xatolik:", error);
@@ -450,6 +491,7 @@ async function getSales() {
     }
 
     return data.map(s => ({
+        id: s.id,
         productId: s.product_id,
         qty: s.qty,
         soldPrice: Number(s.sold_price),
@@ -576,6 +618,14 @@ async function loadSiteSettings() {
     if (videoLink && data.location_video_url) {
         videoLink.href = data.location_video_url;
         videoLink.style.display = "inline-flex";
+    }
+
+    if (window.setSiteContact) {
+        setSiteContact({
+            telegram: data.telegram,
+            instagram: data.instagram,
+            phone: data.phone
+        });
     }
 
 }
