@@ -273,6 +273,7 @@ document.querySelectorAll(".admin-nav-btn[data-tab]").forEach(btn => {
         if (btn.dataset.tab === "products") renderProductTable();
         if (btn.dataset.tab === "dashboard") renderDashboard();
         if (btn.dataset.tab === "settings") loadContactSettingsForm();
+        if (btn.dataset.tab === "reviews") renderReviewsTable();
 
         if (adminSidebar) adminSidebar.classList.remove("active");
 
@@ -894,6 +895,64 @@ async function refreshAll() {
     await renderDashboard();
     await renderProductTable();
     await renderStats();
+}
+
+// ==============================
+// SHARHLAR (Reviews) — MODERATSIYA
+// ==============================
+
+async function renderReviewsTable() {
+
+    await refreshProducts();
+
+    const reviews = await getAllReviews();
+    const container = document.getElementById("reviewsTable");
+
+    if (!reviews.length) {
+        container.innerHTML = `<p class="empty-note">Hozircha sharhlar yo'q</p>`;
+        return;
+    }
+
+    container.innerHTML = reviews.map(r => {
+
+        const product = getProductById(r.product_id);
+        const productName = product ? product.name : "(mahsulot o'chirilgan)";
+        const dateStr = new Date(r.created_at).toLocaleDateString("uz-UZ");
+
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+            stars += `<i class="fa-solid fa-star" style="opacity:${i <= r.rating ? 1 : 0.25}"></i>`;
+        }
+
+        return `
+            <div class="review-admin-row">
+                <span><strong>${productName}</strong><br><span style="color:var(--gray);font-size:12px;">${dateStr}</span></span>
+                <span>${r.name}</span>
+                <span class="stars-mini">${stars}</span>
+                <p>${r.comment || ""}</p>
+                <button class="delete-btn" onclick="removeReview(${r.id})" title="O'chirish" style="width:34px;height:34px;border-radius:9px;background:var(--white);">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+async function removeReview(id) {
+
+    if (!confirm("Ushbu sharhni o'chirmoqchimisiz?")) return;
+
+    const ok = await deleteReview(id);
+
+    if (!ok) {
+        alert("O'chirishda xatolik yuz berdi");
+        return;
+    }
+
+    await renderReviewsTable();
+
 }
 
 (async function initAdmin() {
