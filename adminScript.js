@@ -189,6 +189,9 @@ async function loadContactSettingsForm() {
     if (data) {
         document.getElementById("set_address").value = data.address || "";
         document.getElementById("set_video").value = data.location_video_url || "";
+        document.getElementById("set_telegram").value = data.telegram || "";
+        document.getElementById("set_instagram").value = data.instagram || "";
+        document.getElementById("set_phone").value = data.phone || "";
     }
 
 }
@@ -199,13 +202,23 @@ document.getElementById("contactSettingsForm").addEventListener("submit", async 
 
     const address = document.getElementById("set_address").value.trim();
     const video = document.getElementById("set_video").value.trim();
+    const telegram = document.getElementById("set_telegram").value.trim();
+    const instagram = document.getElementById("set_instagram").value.trim();
+    const phone = document.getElementById("set_phone").value.trim();
     const msg = document.getElementById("contactSettingsMsg");
 
     msg.className = "settings-msg";
 
     const { error } = await sb
         .from("site_settings")
-        .upsert({ id: 1, address, location_video_url: video });
+        .upsert({
+            id: 1,
+            address,
+            location_video_url: video,
+            telegram,
+            instagram,
+            phone
+        });
 
     if (error) {
         msg.textContent = "Xatolik: " + error.message;
