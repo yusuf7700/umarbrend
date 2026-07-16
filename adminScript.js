@@ -209,16 +209,22 @@ document.getElementById("contactSettingsForm").addEventListener("submit", async 
 
     msg.className = "settings-msg";
 
+    // Avval mavjud qiymatlarni olamiz, so'ng faqat to'ldirilgan
+    // maydonlarni ustiga yozamiz — bo'sh maydon eskisini o'chirmaydi
+    const { data: existing } = await sb.from("site_settings").select("*").eq("id", 1).single();
+
+    const payload = {
+        id: 1,
+        address: address || (existing ? existing.address : "") || "",
+        location_video_url: video || (existing ? existing.location_video_url : "") || "",
+        telegram: telegram || (existing ? existing.telegram : "") || "",
+        instagram: instagram || (existing ? existing.instagram : "") || "",
+        phone: phone || (existing ? existing.phone : "") || ""
+    };
+
     const { error } = await sb
         .from("site_settings")
-        .upsert({
-            id: 1,
-            address,
-            location_video_url: video,
-            telegram,
-            instagram,
-            phone
-        });
+        .upsert(payload);
 
     if (error) {
         msg.textContent = "Xatolik: " + error.message;
