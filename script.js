@@ -542,6 +542,45 @@ async function initProductsData() {
 }
 
 initProductsData();
+
+
+// ==============================
+// SAYT SOZLAMALARI (banner, manzil, video)
+// ==============================
+
+async function loadSiteSettings() {
+
+    const { data, error } = await sb.from("site_settings").select("*").eq("id", 1).single();
+
+    if (error || !data) return;
+
+    const heroImg = document.getElementById("heroBannerImg");
+    const heroPlaceholder = document.getElementById("heroPlaceholder");
+
+    if (heroImg && data.banner_image) {
+        heroImg.src = data.banner_image;
+        heroImg.style.display = "block";
+        if (heroPlaceholder) heroPlaceholder.style.display = "none";
+    }
+
+    const addrBox = document.getElementById("footerAddress");
+    const addrText = document.getElementById("footerAddressText");
+
+    if (addrBox && addrText && data.address) {
+        addrText.textContent = data.address;
+        addrBox.style.display = "flex";
+    }
+
+    const videoLink = document.getElementById("footerVideoLink");
+
+    if (videoLink && data.location_video_url) {
+        videoLink.href = data.location_video_url;
+        videoLink.style.display = "inline-flex";
+    }
+
+}
+
+loadSiteSettings();
 // =====================================
 // SEARCH MODAL
 // =====================================
