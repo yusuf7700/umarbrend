@@ -582,10 +582,7 @@ async function incrementProductViews(product) {
 
     product.views = (product.views || 0) + 1;
 
-    const { error } = await sb
-        .from("products")
-        .update({ views: product.views })
-        .eq("id", product.id);
+    const { error } = await sb.rpc("increment_view", { p_id: product.id });
 
     if (error) console.error("Ko'rishlar sonini yangilashda xatolik:", error);
 
