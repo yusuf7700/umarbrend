@@ -2,7 +2,8 @@
 // UMAR BREND — ADMIN PANEL (SUPABASE)
 // ======================================
 
-let ADMIN_PASSWORD = "umar2026"; // <-- boshlang'ich parol (keyinchalik Sozlamalar orqali o'zgartiriladi)
+let ADMIN_USERNAME = "admin";
+let ADMIN_PASSWORD = "umar2026"; // <-- boshlang'ich login/parol (keyinchalik Sozlamalar orqali o'zgartiriladi)
 
 const loginScreen = document.getElementById("adminLogin");
 const adminApp = document.getElementById("adminApp");
@@ -11,22 +12,27 @@ const loginError = document.getElementById("loginError");
 
 
 // ==============================
-// PAROLNI SUPABASE'DAN YUKLASH
+// LOGIN/PAROLNI SUPABASE'DAN YUKLASH
 // ==============================
 
 async function loadAdminPassword() {
 
     const { data, error } = await sb
         .from("admin_settings")
-        .select("password")
+        .select("username, password")
         .eq("id", 1)
         .single();
 
     if (!error && data && data.password) {
+        ADMIN_USERNAME = data.username || ADMIN_USERNAME;
         ADMIN_PASSWORD = data.password;
     } else {
         // Birinchi marta ishga tushganda qatorni yaratib qo'yamiz
-        await sb.from("admin_settings").upsert({ id: 1, password: ADMIN_PASSWORD });
+        await sb.from("admin_settings").upsert({
+            id: 1,
+            username: ADMIN_USERNAME,
+            password: ADMIN_PASSWORD
+        });
     }
 
 }
@@ -38,7 +44,7 @@ async function loadAdminPassword() {
 
 function checkAuth() {
 
-    if (sessionStorage.getItem("ub_admin_auth") === "true") {
+    if (localStorage.getItem("ub_admin_auth") === "true") {
         loginScreen.style.display = "none";
         adminApp.style.display = "flex";
         refreshAll();
@@ -53,10 +59,11 @@ loginForm.addEventListener("submit", (e) => {
 
     e.preventDefault();
 
-    const value = document.getElementById("loginPassword").value;
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
 
-    if (value === ADMIN_PASSWORD) {
-        sessionStorage.setItem("ub_admin_auth", "true");
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        localStorage.setItem("ub_admin_auth", "true");
         loginError.classList.remove("show");
         checkAuth();
     } else {
@@ -66,28 +73,30 @@ loginForm.addEventListener("submit", (e) => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-    sessionStorage.removeItem("ub_admin_auth");
+    localStorage.removeItem("ub_admin_auth");
     checkAuth();
 });
 
 
 // ==============================
-// SOZLAMALAR — PAROLNI O'ZGARTIRISH
+// SOZLAMALAR — LOGIN VA PAROLNI O'ZGARTIRISH
 // ==============================
 
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
+    const currentUsername = document.getElementById("set_current_username").value;
     const current = document.getElementById("set_current").value;
+    const newUsername = document.getElementById("set_new_username").value.trim();
     const newPass = document.getElementById("set_new").value;
     const confirmPass = document.getElementById("set_confirm").value;
     const msg = document.getElementById("settingsMsg");
 
     msg.className = "settings-msg";
 
-    if (current !== ADMIN_PASSWORD) {
-        msg.textContent = "Joriy parol noto'g'ri";
+    if (currentUsername !== ADMIN_USERNAME || current !== ADMIN_PASSWORD) {
+        msg.textContent = "Joriy login yoki parol noto'g'ri";
         msg.classList.add("error");
         return;
     }
@@ -100,7 +109,7 @@ document.getElementById("settingsForm").addEventListener("submit", async (e) => 
 
     const { error } = await sb
         .from("admin_settings")
-        .update({ password: newPass })
+        .update({ username: newUsername, password: newPass })
         .eq("id", 1);
 
     if (error) {
@@ -109,12 +118,106 @@ document.getElementById("settingsForm").addEventListener("submit", async (e) => 
         return;
     }
 
+    ADMIN_USERNAME = newUsername;
     ADMIN_PASSWORD = newPass;
-    msg.textContent = "Parol muvaffaqiyatli o'zgartirildi ✅";
+    msg.textContent = "Login va parol muvaffaqiyatli o'zgartirildi ✅";
     msg.classList.add("success");
     document.getElementById("settingsForm").reset();
 
 });
+
+
+// ==============================
+// SOZLAMALAR — BANNER RASMI
+// ==============================
+
+document.getElementById("bannerImage").addEventListener("change", async (e) => {
+
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const preview = document.getElementById("bannerImagePreview");
+    preview.innerHTML = `<span style="font-size:13px;color:var(--gray);">Yuklanmoqda...</span>`;
+
+    const url = await uploadImageToStorage(file);
+
+    if (url) {
+        preview.innerHTML = `<img src="${url}">`;
+        preview.dataset.url = url;
+    }
+
+});
+
+document.getElementById("saveBannerBtn").addEventListener("click", async () => {
+
+    const preview = document.getElementById("bannerImagePreview");
+    const url = preview.dataset.url;
+    const msg = document.getElementById("bannerMsg");
+
+    msg.className = "settings-msg";
+
+    if (!url) {
+        msg.textContent = "Avval rasm tanlang";
+        msg.classList.add("error");
+        return;
+    }
+
+    const { error } = await sb
+        .from("site_settings")
+        .upsert({ id: 1, banner_image: url });
+
+    if (error) {
+        msg.textContent = "Xatolik: " + error.message;
+        msg.classList.add("error");
+        return;
+    }
+
+    msg.textContent = "Banner saqlandi ✅";
+    msg.classList.add("success");
+
+});
+
+
+// ==============================
+// SOZLAMALAR — MANZIL VA VIDEO
+// ==============================
+
+async function loadContactSettingsForm() {
+
+    const { data } = await sb.from("site_settings").select("*").eq("id", 1).single();
+
+    if (data) {
+        document.getElementById("set_address").value = data.address || "";
+        document.getElementById("set_video").value = data.location_video_url || "";
+    }
+
+}
+
+document.getElementById("contactSettingsForm").addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const address = document.getElementById("set_address").value.trim();
+    const video = document.getElementById("set_video").value.trim();
+    const msg = document.getElementById("contactSettingsMsg");
+
+    msg.className = "settings-msg";
+
+    const { error } = await sb
+        .from("site_settings")
+        .upsert({ id: 1, address, location_video_url: video });
+
+    if (error) {
+        msg.textContent = "Xatolik: " + error.message;
+        msg.classList.add("error");
+        return;
+    }
+
+    msg.textContent = "Saqlandi ✅";
+    msg.classList.add("success");
+
+});
+
 
 
 // ==============================
@@ -150,6 +253,7 @@ document.querySelectorAll(".admin-nav-btn[data-tab]").forEach(btn => {
         if (btn.dataset.tab === "stats") renderStats();
         if (btn.dataset.tab === "products") renderProductTable();
         if (btn.dataset.tab === "dashboard") renderDashboard();
+        if (btn.dataset.tab === "settings") loadContactSettingsForm();
 
         if (adminSidebar) adminSidebar.classList.remove("active");
 
