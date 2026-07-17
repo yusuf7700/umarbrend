@@ -8,10 +8,6 @@ function createProductCard(product) {
         ? `<div class="old-price">${product.oldPrice.toLocaleString()} so'm</div>`
         : "";
 
-    const colorsHtml = (product.colors && product.colors.length)
-        ? `<div class="card-color-dots">${product.colors.map(c => `<span style="background:${c.hex || "#ccc"}" title="${c.name}"></span>`).join("")}</div>`
-        : "";
-
     return `
 
 <div class="product-card fade" data-id="${product.id}">
@@ -39,8 +35,6 @@ function createProductCard(product) {
         <div class="product-price">${product.price.toLocaleString()} so'm</div>
 
         ${oldPriceHtml}
-
-        ${colorsHtml}
 
         <div class="product-stats">
             <span>👁 ${product.views}</span>
@@ -315,18 +309,17 @@ function updateCartCount() {
     badge.style.display = total ? "flex" : "none";
 }
 
-function addToCart(id, size, qty, color) {
+function addToCart(id, size, qty) {
 
     id = Number(id);
     qty = Number(qty) || 1;
-    color = color || "";
 
-    const existing = cart.find(item => item.id === id && item.size === size && (item.color || "") === color);
+    const existing = cart.find(item => item.id === id && item.size === size);
 
     if (existing) {
         existing.qty += qty;
     } else {
-        cart.push({ id, size, qty, color });
+        cart.push({ id, size, qty });
     }
 
     saveCart();
@@ -384,7 +377,7 @@ function renderCart() {
                 <img src="${product.image}" alt="${product.name}">
                 <div class="cart-item-info">
                     <h4>${product.name}</h4>
-                    <span class="cart-item-size">${item.size} razmer${item.color ? " · " + item.color : ""}</span>
+                    <span class="cart-item-size">${item.size} razmer</span>
                     <div class="cart-item-price">${lineTotal.toLocaleString()} so'm</div>
                     <div class="qty-control">
                         <button onclick="changeQty(${index},-1)">-</button>
@@ -445,8 +438,7 @@ function normalizeProduct(row) {
         sizes: row.sizes || [],
         image: row.image,
         images: row.images || [],
-        description: row.description || "",
-        colors: row.colors || []
+        description: row.description || ""
     };
 
 }
@@ -564,19 +556,17 @@ async function getSales() {
         productId: s.product_id,
         qty: s.qty,
         soldPrice: Number(s.sold_price),
-        color: s.color || "",
         date: s.created_at
     }));
 
 }
 
-async function addSale(productId, qty, soldPrice, color) {
+async function addSale(productId, qty, soldPrice) {
 
     const { error } = await sb.from("sales").insert({
         product_id: Number(productId),
         qty: Number(qty),
-        sold_price: Number(soldPrice),
-        color: color || null
+        sold_price: Number(soldPrice)
     });
 
     if (error) console.error("Sotuvni saqlashda xatolik:", error);
