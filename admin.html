@@ -405,17 +405,6 @@
                 <input type="file" id="pf_extraImages" accept="image/*" multiple>
                 <div class="image-preview" id="pf_extraImagesPreview"></div>
 
-                <label style="margin-top:24px;display:flex;align-items:center;justify-content:space-between;">
-                    <span>Ranglar (ixtiyoriy)</span>
-                    <button type="button" class="btn btn-outline" id="addColorBtn" style="padding:6px 16px;font-size:13px;">
-                        <i class="fa-solid fa-plus"></i> Rang qo'shish
-                    </button>
-                </label>
-                <p style="color:var(--gray);font-size:12px;margin-top:-4px;margin-bottom:10px;">
-                    Agar rang qo'shsangiz, "Qolgan soni" avtomatik ranglar yig'indisidan hisoblanadi.
-                </p>
-                <div id="colorRows"></div>
-
                 <button type="submit" class="btn btn-gold" style="width:100%;margin-top:20px;">
                     Saqlash
                 </button>
@@ -444,11 +433,6 @@
             <form id="sellForm">
 
                 <input type="hidden" id="sell_id">
-
-                <div id="sellColorWrap" style="display:none;">
-                    <label>Qaysi rangdan sotildi?</label>
-                    <select id="sell_color"></select>
-                </div>
 
                 <label>Nechta sotildi?</label>
                 <input type="number" id="sell_qty" min="1" value="1" required>
