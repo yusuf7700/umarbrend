@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mahsulotlar | Umar Brend</title>
+
+    <meta name="description" content="Umar Brend — barcha oyoq kiyimlar to'plami.">
+
+    <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpg">
+    <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#C9A227">
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body data-page="mahsulotlar">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <a href="index.html" class="logo">
+                <img src="assets/logo/logo.jpg" alt="Umar Brend">
+            </a>
+
+            <nav class="navbar">
+                <a href="index.html">Bosh sahifa</a>
+                <a href="mahsulotlar.html?category=erkak" id="navErkaklar">Erkaklar</a>
+                <a href="mahsulotlar.html?category=ayol" id="navAyollar">Ayollar</a>
+            </nav>
+
+            <div class="header-icons">
+
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <button class="icon-btn" id="searchBtn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <a class="icon-btn" href="sevimlilar.html" style="position:relative;">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="count-badge" id="favCount">0</span>
+                </a>
+
+                <button class="icon-btn" id="cartBtn" style="position:relative;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="count-badge" id="cartCount">0</span>
+                </button>
+
+                <button class="icon-btn" id="themeBtn">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ================= CATALOG ================= -->
+
+    <section class="products" style="padding-top:170px;">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2 id="catalogTitle">🛍 Barcha mahsulotlar</h2>
+                <p id="catalogSubtitle">To'liq to'plamimizni ko'ring</p>
+            </div>
+
+            <div class="category-filters">
+                <a href="mahsulotlar.html" class="filter-chip" id="filterAll">Barchasi</a>
+                <a href="mahsulotlar.html?category=erkak" class="filter-chip" id="filterErkak">Erkaklar</a>
+                <a href="mahsulotlar.html?category=ayol" class="filter-chip" id="filterAyol">Ayollar</a>
+            </div>
+
+            <div class="product-grid" id="catalogGrid"></div>
+
+            <div id="catalogEmptyState"></div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <img src="assets/logo/logo.jpg" alt="Umar Brend">
+
+            <p>© 2026 Umar Brend. Barcha huquqlar himoyalangan.</p>
+
+            <div class="footer-address" id="footerAddress" style="display:none;">
+                <i class="fa-solid fa-location-dot"></i>
+                <span id="footerAddressText"></span>
+            </div>
+
+            <div class="footer-links">
+                <a href="tel:+998901234567" id="footerPhoneLink"><i class="fa-solid fa-phone"></i> <span id="footerPhoneText">+998 90 123 45 67</span></a>
+                <a href="https://t.me/umarbrend" target="_blank" id="footerTelegramLink"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                <a href="https://instagram.com/umarbrend" target="_blank" id="footerInstagramLink"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#" id="footerVideoLink" target="_blank" rel="noopener" style="display:none;">
+                    <i class="fa-solid fa-location-arrow"></i> Manzil videosi
+                </a>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- SEARCH MODAL -->
+
+    <div class="search-modal" id="searchModal">
+        <div class="search-box">
+            <div class="search-input-row">
+                <input type="text" id="searchInput" placeholder="Mahsulot qidirish...">
+                <button id="closeSearch"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+
+        function renderCatalogEmptyState(hasItems) {
+
+            const empty = document.getElementById("catalogEmptyState");
+
+            empty.innerHTML = hasItems ? "" : `
+                <div class="empty-state">
+                    <i class="fa-solid fa-shoe-prints"></i>
+                    <h3>Bu bo'limda hozircha mahsulot yo'q</h3>
+                    <p><a href="index.html" style="color:var(--gold);font-weight:600;">Bosh sahifaga qaytish</a></p>
+                </div>
+            `;
+
+        }
+
+        document.addEventListener("productsReady", () => {
+
+            const params = new URLSearchParams(window.location.search);
+            const category = params.get("category");
+
+            let list = [...products].sort((a, b) => b.id - a.id);
+            let title = "🛍 Barcha mahsulotlar";
+            let subtitle = "To'liq to'plamimizni ko'ring";
+
+            if (category === "erkak") {
+                list = list.filter(p => p.category === "erkak");
+                title = "👔 Erkaklar uchun mahsulotlar";
+                subtitle = "Erkaklar kolleksiyasi";
+                document.getElementById("filterErkak").classList.add("active");
+            } else if (category === "ayol") {
+                list = list.filter(p => p.category === "ayol");
+                title = "👗 Ayollar uchun mahsulotlar";
+                subtitle = "Ayollar kolleksiyasi";
+                document.getElementById("filterAyol").classList.add("active");
+            } else {
+                document.getElementById("filterAll").classList.add("active");
+            }
+
+            document.getElementById("catalogTitle").textContent = title;
+            document.getElementById("catalogSubtitle").textContent = subtitle;
+
+            renderProducts("catalogGrid", list);
+            renderCatalogEmptyState(list.length > 0);
+
+        });
+
+    </script>
+
+</body>
+
+</html>
