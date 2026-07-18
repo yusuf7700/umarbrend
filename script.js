@@ -473,6 +473,19 @@ function getProductById(id) {
     return products.find(p => p.id === Number(id));
 }
 
+// Eski mahsulotlarda "sizes" oddiy raqamlar ro'yxati edi ([39,40,41]).
+// Endi har razmer uchun alohida son kerak: [{size:39,stock:5}, ...].
+// Eski formatni buzmasdan qo'llab-quvvatlaymiz.
+function normalizeSizes(product) {
+
+    if (!product.sizes || !product.sizes.length) return [];
+
+    if (typeof product.sizes[0] === "object") return product.sizes;
+
+    return product.sizes.map(s => ({ size: s, stock: product.stock }));
+
+}
+
 
 // ==============================
 // MIJOZ SHARHLARI (Reviews)
@@ -556,17 +569,19 @@ async function getSales() {
         productId: s.product_id,
         qty: s.qty,
         soldPrice: Number(s.sold_price),
+        size: s.size || null,
         date: s.created_at
     }));
 
 }
 
-async function addSale(productId, qty, soldPrice) {
+async function addSale(productId, qty, soldPrice, size) {
 
     const { error } = await sb.from("sales").insert({
         product_id: Number(productId),
         qty: Number(qty),
-        sold_price: Number(soldPrice)
+        sold_price: Number(soldPrice),
+        size: size || null
     });
 
     if (error) console.error("Sotuvni saqlashda xatolik:", error);
