@@ -1980,6 +1980,25 @@ height:360px;
 
 }
 
+.size-btn.disabled,
+.size-btn:disabled{
+
+    opacity:.35;
+    text-decoration:line-through;
+    cursor:not-allowed;
+    border-color:var(--border);
+    color:var(--gray);
+
+}
+
+.size-btn.disabled:hover,
+.size-btn:disabled:hover{
+
+    border-color:var(--border);
+    color:var(--gray);
+
+}
+
 .detail-qty{
 
     display:flex;
